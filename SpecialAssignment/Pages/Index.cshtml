@@ -1,0 +1,64 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Early Warning Monitoring";
+}
+
+<div class="page-wrap">
+    <div class="rise">
+        <p class="micro-label">GIS · Early Warning · Farmer–Herder Response</p>
+        <h1 class="display-5 fw-bold" style="font-size:clamp(2rem,4.5vw,3rem)">See conflict early.<br />Respond in minutes.</h1>
+        <p class="lead" style="color:var(--muted);max-width:62ch">Reporting stays radically simple — no forms, just live location. Operators get the real-time GIS picture: live reporters on Google Maps, movement trails, risk-zone alerts.</p>
+        <div class="d-flex gap-2 flex-wrap mt-3">
+            <a class="btn btn-danger" asp-page="/Report/Index">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-6-7-11a7 7 0 0114 0c0 5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+                Report / Share Location
+            </a>
+            <a class="btn btn-accent" asp-page="/Dashboard/Index">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 12l9-9 9 9M5 10v10h5v-6h4v6h5V10"/></svg>
+                Open Operations Dashboard
+            </a>
+            <a class="btn btn-secondary" asp-page="/Alerts/Index">View Alerts</a>
+        </div>
+    </div>
+
+    <div class="cmdbox mt-4" role="note" aria-label="Reporting flow">
+        <span class="prompt" aria-hidden="true">$</span>
+        <code>report &rarr; consent &rarr; share-location &rarr; live-marker + trail &rarr; stop-sharing</code>
+    </div>
+
+    <div class="row g-3 mt-3 rise">
+        <div class="col-md-4">
+            <section class="card card-hover card-pad-lg h-100">
+                <p class="micro-label">01 · Reporter</p>
+                <h2 class="h5">One tap, no form</h2>
+                <p class="small mb-0" style="color:var(--muted)">Consent, GPS permission, live tracking. Stop sharing any time. Built mobile-first with 52px touch targets.</p>
+            </section>
+        </div>
+        <div class="col-md-4">
+            <section class="card card-hover card-pad-lg h-100">
+                <p class="micro-label">02 · Pipeline</p>
+                <h2 class="h5">ASP.NET Core → MySQL → SignalR</h2>
+                <p class="small mb-0" style="color:var(--muted)">Every coordinate is validated, stored with its GPS timestamp, and pushed to dashboards without refresh.</p>
+            </section>
+        </div>
+        <div class="col-md-4">
+            <section class="card card-hover card-pad-lg h-100">
+                <p class="micro-label">03 · Operations</p>
+                <h2 class="h5">Map-first intelligence</h2>
+                <p class="small mb-0" style="color:var(--muted)">Live markers, movement trails, risk-zone geofencing, cluster warnings, audit-logged actions.</p>
+            </section>
+        </div>
+    </div>
+
+    <section class="card card-pad-lg mt-3" aria-labelledby="rolesHeading">
+        <p class="micro-label" id="rolesHeading">Access</p>
+        <div class="d-flex gap-2 flex-wrap align-items-center">
+            <span class="pill pill-info">Public · Report</span>
+            <span class="pill pill-live">Operators · Dashboard</span>
+            <span class="pill pill-warn">Analysts · Risk zones</span>
+            <span class="pill pill-ended">Admins · Users &amp; audit</span>
+            <span style="margin-left:auto" class="small" style="color:var(--muted)">Demo operator: <span class="mono">admin@earlywarning.local / Admin123!</span></span>
+        </div>
+    </section>
+</div>

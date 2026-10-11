@@ -1,0 +1,36 @@
+@page
+@model SpecialAssignment.Pages.Alerts.IndexModel
+@{ ViewData["Title"] = "Alerts"; }
+<div class="page-wrap">
+    <div class="page-head">
+        <div>
+            <p class="micro-label mb-0">Early warning · severity + label, never color alone</p>
+            <h1>Alerts</h1>
+            <p class="sub">Acknowledge an alert to claim ownership. The dashboard rail shows active alerts live.</p>
+        </div>
+        <div class="actions">
+            <div class="filter-tabs" role="group" aria-label="Filter alerts">
+                <a asp-page="/Alerts/Index" class="active">All</a>
+                <a asp-page="/Dashboard/Index">Live view</a>
+            </div>
+        </div>
+    </div>
+    <div class="alert-rail rise">
+    @foreach (var a in Model.Alerts)
+    {
+        <div class="card card-pad alert-item sev-@a.Severity">
+            <div class="d-flex gap-2 align-items-center flex-wrap">
+                <span class="pill @(a.Severity == "CRITICAL" ? "pill-critical" : a.Severity == "HIGH" ? "pill-high" : a.Severity == "WARNING" ? "pill-warn" : "pill-info")">@a.Severity</span>
+                <strong>@a.Title</strong>
+                <span class="micro-label" style="margin-left:auto">@a.CreatedAt.ToString("u") · @a.Status</span>
+            </div>
+            <p class="text-muted small mb-2 mt-1">@a.Message</p>
+            @if (a.Status == "ACTIVE")
+            {
+                <form method="post" asp-page-handler="Acknowledge" asp-route-id="@a.Id"><button class="btn btn-sm btn-secondary" type="submit">Acknowledge</button></form>
+            }
+        </div>
+    }
+    @if (!Model.Alerts.Any()) { <div class="card"><div class="empty-state"><strong>All clear</strong><span>No alerts recorded.</span></div></div> }
+    </div>
+</div>

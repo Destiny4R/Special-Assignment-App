@@ -1,0 +1,89 @@
+@page
+@model SpecialAssignment.Pages.Report.IndexModel
+@{
+    ViewData["Title"] = "Report an Emergency";
+}
+@section Styles { <link rel="stylesheet" href="~/css/reporter.css" asp-append-version="true" /> }
+
+<div class="reporter-wrap">
+    <div class="reporter-col">
+        <div id="reporterError" class="alert alert-warning" role="alert" hidden></div>
+        <ol class="reporter-steps" aria-label="Reporting steps">
+            <li class="done" aria-current="false"><span class="step-n" aria-hidden="true">1</span> Report</li>
+            <li id="stepConsent"><span class="step-n" aria-hidden="true">2</span> Consent</li>
+            <li id="stepShare"><span class="step-n" aria-hidden="true">3</span> Share location</li>
+        </ol>
+
+        <!-- Idle state: one dominant action, no form (§4) -->
+        <section id="reporterIdle" class="card reporter-card" aria-labelledby="reportHeading">
+            <div class="reporter-logo" aria-hidden="true">EW</div>
+            <p class="micro-label">Emergency reporting · No account needed</p>
+            <h1 id="reportHeading">Report an Emergency</h1>
+            <p class="reporter-sub">Share your live location with authorized response personnel. Nothing to fill in — one tap.</p>
+            <button id="btnShare" class="btn btn-danger reporter-cta" data-bs-toggle="modal" data-bs-target="#consentModal">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-6-7-11a7 7 0 0114 0c0 5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+                Share My Location
+            </button>
+            <ul class="reporter-trust">
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3l7 3v5c0 5-3.5 8-7 10-3.5-2-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg> Consent first</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3l7 3v5c0 5-3.5 8-7 10-3.5-2-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg> Stop anytime</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3l7 3v5c0 5-3.5 8-7 10-3.5-2-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg> Responders only</li>
+            </ul>
+        </section>
+
+        <!-- Active state -->
+        <section id="reporterActive" class="reporter-live" aria-labelledby="liveHeading" hidden>
+            <p class="micro-label" style="color:var(--live)">Sharing · Terms @Model.TermsVersion</p>
+            <h2 id="liveHeading">Location Sharing Active</h2>
+            <p><span id="reporterStatusPill" class="pill pill-live"><span class="dot dot-pulse" aria-hidden="true"></span><span id="reporterStatus">LIVE</span></span></p>
+            <dl class="live-stats">
+                <div><dt>Report ID</dt><dd class="mono" id="reportIdLabel">—</dd></div>
+                <div><dt>Last update</dt><dd id="lastUpdate">just now</dd></div>
+                <div><dt>GPS accuracy</dt><dd id="accuracy">—</dd></div>
+            </dl>
+            <p id="queueNote" class="reporter-queue" hidden></p>
+            <button id="btnStop" class="btn btn-secondary w-100">Stop Sharing</button>
+        </section>
+    </div>
+</div>
+
+<!-- Terms & Conditions modal (§5) -->
+<div class="modal fade" id="consentModal" tabindex="-1" aria-labelledby="consentTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <p class="micro-label mb-1">Step 2 of 3 · Required</p>
+                    <h2 class="modal-title fs-5" id="consentTitle">Location Sharing Consent</h2>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"></button>
+            </div>
+            <div class="modal-body text-start">
+                <ul class="consent-list">
+                    <li>The application will collect your GPS coordinates.</li>
+                    <li>Coordinates are transmitted continuously while the session is active.</li>
+                    <li>Only authorized response personnel may view your live location.</li>
+                    <li>Collection is for conflict early-warning and response purposes.</li>
+                    <li>You can stop sharing at any time.</li>
+                    <li>Retention is governed by the privacy policy (Terms @Model.TermsVersion).</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" id="btnAgree" class="btn btn-accent">I Agree &amp; Share Location</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    window.__reporterConfig = { termsVersion: '@Model.TermsVersion', minMeters: 15, minSeconds: 8 };
+    document.getElementById('btnShare')?.addEventListener('click', () => document.getElementById('stepConsent')?.classList.add('current'));
+    document.getElementById('btnAgree')?.addEventListener('click', () => {
+        document.getElementById('stepConsent')?.classList.add('done');
+        document.getElementById('stepShare')?.classList.add('current');
+    });
+</script>
+<script src="~/js/reporter-location.js" asp-append-version="true"></script>
+}

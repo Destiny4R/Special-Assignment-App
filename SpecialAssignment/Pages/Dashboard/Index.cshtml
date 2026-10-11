@@ -1,0 +1,104 @@
+@page
+@model SpecialAssignment.Pages.Dashboard.IndexModel
+@{
+    ViewData["Title"] = "Operations Dashboard";
+}
+@section Styles { <link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" /> }
+
+<div class="ops-shell">
+    <nav class="ops-sidebar" id="opsSidebar" aria-label="Operations">
+        <p class="micro-label px-2">Operations</p>
+        <a asp-page="/Dashboard/Index" class="active" aria-current="page">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 12l9-9 9 9M5 10v10h5v-6h4v6h5V10"/></svg>
+            Overview</a>
+        <a asp-page="/Incidents/Index">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+            Reports</a>
+        <a asp-page="/Alerts/Index">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3l10 18H2zM12 10v5m0 3v.5"/></svg>
+            Alerts <span class="nav-count" id="navAlertCount" hidden></span></a>
+        <a asp-page="/Incidents/History">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+            History</a>
+        <p class="micro-label px-2 mt-3">Configure</p>
+        <a asp-page="/Admin/RiskZones/Index">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-6-7-11a7 7 0 0114 0c0 5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+            Risk Zones</a>
+    </nav>
+
+    <div class="ops-main">
+        <div class="ops-topbar">
+            <button class="btn btn-sm btn-secondary d-lg-none" id="btnMenu" aria-label="Open navigation">Menu</button>
+            <div>
+                <p class="micro-label mb-0">What · Where · How serious · What next</p>
+                <h1 class="h5 mb-0">Operations Dashboard</h1>
+            </div>
+            <span class="spacer"></span>
+            <span id="liveCount" class="pill pill-live" role="status"><span class="dot dot-pulse" aria-hidden="true"></span>— live</span>
+            <span class="mono text-muted small d-none d-xl-inline" id="opsClock" aria-hidden="true"></span>
+        </div>
+
+        <div class="ops-body">
+            <div class="stat-strip rise" role="status" aria-label="Live counters">
+                <section class="card stat-card"><span class="num" id="statLive" style="color:var(--live)">—</span><span class="cap">Live reporters</span></section>
+                <section class="card stat-card"><span class="num" id="statStale" style="color:var(--stale)">—</span><span class="cap">Stale / weak signal</span></section>
+                <section class="card stat-card"><span class="num" id="statOffline" style="color:var(--offline)">—</span><span class="cap">Offline</span></section>
+                <section class="card stat-card"><span class="num" id="statAlerts" style="color:var(--high)">—</span><span class="cap">Active alerts</span></section>
+            </div>
+
+            <section class="card mt-3" aria-label="Live GIS map">
+                <div class="ops-map" role="region" aria-label="Live GIS map">
+                    <div id="opsMap"></div>
+                    <div class="map-legend" role="group" aria-label="Map layers">
+                        <span class="micro-label">Layers</span>
+                        <label><input type="checkbox" checked disabled /> Live Reports</label>
+                        <label><input type="checkbox" checked disabled /> High-Risk Zones</label>
+                        <label><input type="checkbox" disabled /> Historical Incidents</label>
+                    </div>
+                </div>
+            </section>
+
+            <div class="row g-3 mt-1">
+                <div class="col-lg-8">
+                    <section class="card card-pad" aria-labelledby="liveHeading">
+                        <div class="d-flex align-items-center gap-2 flex-wrap mb-2">
+                            <h2 id="liveHeading" class="h5 mb-0">Live Reports</h2>
+                            <div class="filter-tabs" role="group" aria-label="Filter reports" style="margin-left:auto">
+                                <button type="button" class="active" data-filter="ALL">All</button>
+                                <button type="button" data-filter="LIVE">Live</button>
+                                <button type="button" data-filter="STALE">Stale</button>
+                                <button type="button" data-filter="OFFLINE">Offline</button>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead><tr><th scope="col">Report</th><th scope="col">Status</th><th scope="col">Last update</th><th scope="col"><span class="visually-hidden">Action</span></th></tr></thead>
+                                <tbody id="reportsBody"><tr><td colspan="4">Loading live reports…</td></tr></tbody>
+                            </table>
+                        </div>
+                    </section>
+                </div>
+                <div class="col-lg-4">
+                    <section class="card card-pad" aria-labelledby="alertHeading">
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <h2 id="alertHeading" class="h5 mb-0">Alerts</h2>
+                            <a class="btn btn-sm btn-ghost" style="margin-left:auto" asp-page="/Alerts/Index">Open all</a>
+                        </div>
+                        <div id="alertRail" class="alert-rail"><p class="text-muted">Loading…</p></div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script src="~/js/signalr-monitoring.js" asp-append-version="true"></script>
+<script src="~/js/live-dashboard.js" asp-append-version="true"></script>
+<script>
+    window.__dashboardConfig = { defaultLat: @Model.DefaultLat.ToString(System.Globalization.CultureInfo.InvariantCulture), defaultLon: @Model.DefaultLon.ToString(System.Globalization.CultureInfo.InvariantCulture), defaultZoom: @Model.DefaultZoom };
+    document.getElementById('btnMenu')?.addEventListener('click', () => document.getElementById('opsSidebar').classList.toggle('open'));
+    setInterval(() => { const el = document.getElementById('opsClock'); if (el) el.textContent = new Date().toLocaleTimeString(); }, 1000);
+</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=@Model.MapsKey&callback=initOpsMap"></script>
+}

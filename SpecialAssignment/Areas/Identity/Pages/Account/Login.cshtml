@@ -1,0 +1,55 @@
+@page
+@model SpecialAssignment.Areas.Identity.Pages.Account.LoginModel
+@{
+    ViewData["Title"] = "Operator Login";
+}
+@section Styles { <link rel="stylesheet" href="~/css/auth.css" asp-append-version="true" /> }
+
+<div class="auth-shell">
+    <aside class="auth-brand" aria-hidden="true">
+        <div class="auth-brand-inner">
+            <span class="wordmark-glyph" style="width:34px;height:34px;font-size:1rem">EW</span>
+            <p class="micro-label" style="color:var(--on-inkbar-muted)">Authorized access</p>
+            <h2>Early Warning<br />Operations</h2>
+            <div class="cmdbox"><span class="prompt">$</span><code>receive → locate → monitor → respond</code></div>
+            <ul class="auth-points">
+                <li>Live GIS markers + movement trails</li>
+                <li>Risk-zone geofencing &amp; cluster alerts</li>
+                <li>Audit-logged operator actions</li>
+            </ul>
+        </div>
+    </aside>
+
+    <div class="auth-form-wrap">
+        <section class="card auth-card" aria-labelledby="loginHeading">
+            <p class="micro-label">Operator login</p>
+            <h1 id="loginHeading">Welcome back</h1>
+            <p class="auth-sub">Sign in to monitor live reports and acknowledge alerts.</p>
+            <form id="account" method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                <div class="field mb-3">
+                    <label asp-for="Input.Email">Email</label>
+                    <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="operator@example.org" />
+                    <span asp-validation-for="Input.Email" class="form-error"></span>
+                </div>
+                <div class="field mb-3">
+                    <label asp-for="Input.Password">Password</label>
+                    <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="••••••••" />
+                    <span asp-validation-for="Input.Password" class="form-error"></span>
+                </div>
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <input class="form-check-input" asp-for="Input.RememberMe" />
+                    <label class="form-check-label small" asp-for="Input.RememberMe">Remember me on this device</label>
+                </div>
+                <button id="login-submit" type="submit" class="btn btn-accent w-100" style="min-height:52px">Sign in to Dashboard</button>
+            </form>
+            <div class="auth-demo">
+                <p class="micro-label">Demo credentials</p>
+                <p class="mono mb-0">admin@earlywarning.local · Admin123!</p>
+            </div>
+        </section>
+        <p class="auth-foot">Public reporter? <a asp-page="/Report/Index">Share your location — no login needed</a>.</p>
+    </div>
+</div>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

@@ -1,0 +1,14 @@
+/* Single-report tracking view */
+.track-shell { display: grid; grid-template-columns: 330px 1fr; min-height: calc(100vh - 57px); }
+.track-panel { background: var(--surface); border-right: 1px solid var(--line); padding: 1.4rem 1.25rem; display: flex; flex-direction: column; gap: .8rem; align-items: flex-start; }
+.track-panel > * { width: 100%; }
+.track-map { position: relative; min-height: 480px; background: var(--surface-2); }
+.track-map #trackMap { position: absolute; inset: 0; }
+.track-actions { display: flex; gap: .5rem; flex-wrap: wrap; }
+.kv { display: grid; grid-template-columns: auto 1fr; gap: .4rem .9rem; font-size: .9rem; width: 100%; }
+.kv dt { font-family: var(--font-mono); font-size: .7rem; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); align-self: center; }
+.kv dd { margin: 0; font-weight: 600; overflow-wrap: anywhere; text-align: right; }
+@media (max-width: 1024px) {
+  .track-shell { grid-template-columns: 1fr; }
+  .track-map { min-height: 52vh; order: -1; }
+}

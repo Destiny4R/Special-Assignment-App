@@ -1,0 +1,37 @@
+@page
+@model SpecialAssignment.Pages.Map.LocationModel
+@{
+    ViewData["Title"] = $"Track {Model.ReportId}";
+}
+@section Styles { <link rel="stylesheet" href="~/css/map.css" asp-append-version="true" /> }
+
+<div class="track-shell">
+    <aside class="track-panel" aria-labelledby="trackHeading">
+        <p class="micro-label mb-0">Live tracking</p>
+        <h1 id="trackHeading" class="h5"><span class="cmd-id">@Model.ReportId</span></h1>
+        <p><span id="trackStatus" class="pill pill-live"><span class="dot dot-pulse" aria-hidden="true"></span>LIVE</span></p>
+        <dl class="kv">
+            <dt>Latitude</dt><dd class="mono" id="tLat">—</dd>
+            <dt>Longitude</dt><dd class="mono" id="tLon">—</dd>
+            <dt>Accuracy</dt><dd id="tAcc">—</dd>
+            <dt>Speed</dt><dd id="tSpeed">—</dd>
+            <dt>Last update</dt><dd id="tTime">—</dd>
+        </dl>
+        <div class="track-actions">
+            <button id="btnCenter" class="btn btn-sm btn-accent">Center on reporter</button>
+            <button id="btnStopWatch" class="btn btn-sm btn-secondary">Back to dashboard</button>
+        </div>
+        <p class="text-muted small mb-0">Marker moves as coordinates arrive via SignalR. The polyline is the movement trail.</p>
+    </aside>
+    <div class="track-map" role="region" aria-label="Reporter tracking map">
+        <div id="trackMap"></div>
+        <p id="trackMapNotice" class="alert alert-info m-3" role="status" hidden style="position:absolute;top:0;left:0;right:0;z-index:5"></p>
+    </div>
+</div>
+
+@section Scripts {
+<script src="~/js/signalr-monitoring.js" asp-append-version="true"></script>
+<script src="~/js/live-map.js" asp-append-version="true"></script>
+<script>window.__trackConfig = { reportId: '@Model.ReportId', defaultLat: @Model.DefaultLat.ToString(System.Globalization.CultureInfo.InvariantCulture), defaultLon: @Model.DefaultLon.ToString(System.Globalization.CultureInfo.InvariantCulture) };</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=@Model.MapsKey&callback=initTrackMap"></script>
+}

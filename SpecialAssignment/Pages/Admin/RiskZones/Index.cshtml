@@ -1,0 +1,43 @@
+@page
+@model SpecialAssignment.Pages.Admin.RiskZones.IndexModel
+@{ ViewData["Title"] = "Risk Zones"; }
+<div class="page-wrap">
+    <div class="page-head">
+        <div>
+            <p class="micro-label mb-0">Geofencing · center + radius MVP</p>
+            <h1>Risk Zones</h1>
+            <p class="sub">Reporters entering an active zone raise an alert at the zone's severity. Polygon zones can come later.</p>
+        </div>
+    </div>
+    <section class="card card-pad mb-3" aria-labelledby="addZone">
+        <h2 class="h6" id="addZone">Add zone</h2>
+        <form method="post" class="row g-2">
+            <div class="col-md-3 field"><label asp-for="Input.Name">Name</label><input class="form-control" asp-for="Input.Name" placeholder="Grazing Corridor B" /></div>
+            <div class="col-md-2 field"><label asp-for="Input.RiskLevel">Level</label><select class="form-select" asp-for="Input.RiskLevel"><option>LOW</option><option>MEDIUM</option><option>HIGH</option><option>CRITICAL</option></select></div>
+            <div class="col-md-2 field"><label asp-for="Input.CenterLatitude">Latitude</label><input class="form-control" asp-for="Input.CenterLatitude" placeholder="9.0765" /></div>
+            <div class="col-md-2 field"><label asp-for="Input.CenterLongitude">Longitude</label><input class="form-control" asp-for="Input.CenterLongitude" placeholder="7.3986" /></div>
+            <div class="col-md-2 field"><label asp-for="Input.RadiusMeters">Radius (m)</label><input class="form-control" asp-for="Input.RadiusMeters" placeholder="1000" /></div>
+            <div class="col-md-1 d-flex align-items-end"><button class="btn btn-accent btn-sm w-100" type="submit">Add</button></div>
+        </form>
+    </section>
+    <section class="card card-pad">
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead><tr><th scope="col">Name</th><th scope="col">Level</th><th scope="col">Center</th><th scope="col">Radius</th><th scope="col">Active</th><th scope="col"><span class="visually-hidden">Toggle</span></th></tr></thead>
+                <tbody>
+                @foreach (var z in Model.Zones)
+                {
+                    <tr>
+                        <td><strong>@z.Name</strong></td>
+                        <td><span class="pill @(z.RiskLevel == "CRITICAL" ? "pill-critical" : z.RiskLevel == "HIGH" ? "pill-high" : z.RiskLevel == "MEDIUM" ? "pill-warn" : "pill-info")">@z.RiskLevel</span></td>
+                        <td class="mono small">@z.CenterLatitude, @z.CenterLongitude</td>
+                        <td class="small">@z.RadiusMeters m</td>
+                        <td><span class="pill @(z.IsActive ? "pill-live" : "pill-offline")">@(z.IsActive ? "Active" : "Off")</span></td>
+                        <td style="text-align:right"><form method="post" asp-page-handler="Toggle" asp-route-id="@z.Id"><button class="btn btn-sm btn-secondary">Toggle</button></form></td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>

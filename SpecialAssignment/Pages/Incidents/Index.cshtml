@@ -1,0 +1,36 @@
+@page
+@model SpecialAssignment.Pages.Incidents.IndexModel
+@{ ViewData["Title"] = "Reports"; }
+<div class="page-wrap">
+    <div class="page-head">
+        <div>
+            <p class="micro-label mb-0">Reports · newest first</p>
+            <h1>Reports</h1>
+            <p class="sub">Current and recent report sessions. Open one for details or the live trail.</p>
+        </div>
+        <div class="actions"><a class="btn btn-accent" asp-page="/Dashboard/Index">Open live dashboard</a></div>
+    </div>
+    <section class="card card-pad">
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead><tr><th scope="col">Report</th><th scope="col">Status</th><th scope="col">Started</th><th scope="col">Last seen</th><th scope="col"><span class="visually-hidden">Open</span></th></tr></thead>
+                <tbody>
+                @foreach (var r in Model.Sessions)
+                {
+                    <tr>
+                        <td><span class="cmd-id">@r.PublicReportId</span></td>
+                        <td><span class="pill @(r.Status == "LIVE" ? "pill-live" : r.Status == "STALE" ? "pill-stale" : r.Status == "OFFLINE" ? "pill-offline" : "pill-ended")"><span class="dot" aria-hidden="true"></span>@r.Status</span></td>
+                        <td class="small">@r.StartedAt.ToString("u")</td>
+                        <td class="small">@(r.LastSeenAt?.ToString("u") ?? "—")</td>
+                        <td style="text-align:right"><a class="btn btn-sm btn-secondary" asp-page="/Incidents/Details" asp-route-id="@r.PublicReportId">Details</a></td>
+                    </tr>
+                }
+                @if (!Model.Sessions.Any())
+                {
+                    <tr><td colspan="5"><div class="empty-state"><strong>No reports yet</strong><span>Reports appear here once a reporter shares location.</span></div></td></tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>

@@ -1,0 +1,34 @@
+@page "{id}"
+@model SpecialAssignment.Pages.Incidents.DetailsModel
+@{ ViewData["Title"] = $"Report {Model.Session?.PublicReportId}"; }
+<div class="page-wrap">
+    @if (Model.Session is null)
+    {
+        <div class="card"><div class="empty-state"><strong>Report not found</strong><span>Check the ID and try again.</span></div></div>
+    }
+    else
+    {
+        <div class="page-head">
+            <div>
+                <p class="micro-label mb-0">Report detail</p>
+                <h1><span class="cmd-id" style="font-size:1.2rem">@Model.Session.PublicReportId</span></h1>
+            </div>
+            <div class="actions">
+                <span class="pill pill-info">@Model.Session.Status</span>
+                <a class="btn btn-accent" asp-page="/Map/Location" asp-route-reportId="@Model.Session.PublicReportId">View Location</a>
+            </div>
+        </div>
+        <div class="stat-strip rise mb-3">
+            <section class="card stat-card"><span class="num">@Model.Points.Count</span><span class="cap">GPS points</span></section>
+            <section class="card stat-card"><span class="num" style="font-size:1.1rem;font-family:var(--font-mono)">@(Model.Session.StartedAt.ToString("u"))</span><span class="cap">Started</span></section>
+            <section class="card stat-card"><span class="num" style="font-size:1.1rem;font-family:var(--font-mono)">@(Model.Session.EndedAt?.ToString("u") ?? "—")</span><span class="cap">Ended</span></section>
+            <section class="card stat-card"><span class="num" style="font-size:1.1rem;font-family:var(--font-mono)">@Model.Session.LastLatitude, @Model.Session.LastLongitude</span><span class="cap">Last position</span></section>
+        </div>
+        <section class="card card-pad">
+            <p class="micro-label">Movement trail · latest @Model.Points.Count points</p>
+            <ol class="small mb-0">
+                @foreach (var p in Model.Points.TakeLast(30)) { <li class="mono">@p.Latitude, @p.Longitude — @p.CapturedAt.ToString("u")</li> }
+            </ol>
+        </section>
+    }
+</div>

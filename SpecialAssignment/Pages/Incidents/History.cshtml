@@ -1,0 +1,23 @@
+@page
+@model SpecialAssignment.Pages.Incidents.HistoryModel
+@{ ViewData["Title"] = "History"; }
+<div class="page-wrap">
+    <div class="page-head">
+        <div>
+            <p class="micro-label mb-0">Historical GIS · hotspots &amp; response review</p>
+            <h1>History</h1>
+            <p class="sub">Ended sessions retained for hotspot analysis and response-time review.</p>
+        </div>
+    </div>
+    <section class="card card-pad">
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead><tr><th scope="col">Report</th><th scope="col">Started</th><th scope="col">Ended</th><th scope="col">Points</th></tr></thead>
+                <tbody>
+                @foreach (var r in Model.Rows) { <tr><td><span class="cmd-id">@r.Id</span></td><td class="small">@r.Started</td><td class="small">@r.Ended</td><td class="small">@r.Points</td></tr> }
+                @if (!Model.Rows.Any()) { <tr><td colspan="4"><div class="empty-state"><strong>No history yet</strong><span>Ended sessions will appear here.</span></div></td></tr> }
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>

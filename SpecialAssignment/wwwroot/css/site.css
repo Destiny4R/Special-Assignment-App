@@ -1,0 +1,8 @@
+/* site.css — thin compatibility layer only. Design tokens live in design-system.css. */
+html { position: relative; min-height: 100%; }
+body { display: flex; flex-direction: column; min-height: 100vh; }
+main { flex: 1; }
+a { color: var(--accent-hover); }
+.text-muted { color: var(--muted) !important; }
+.alert { border-radius: var(--radius); }
+.modal-content { border-radius: var(--radius-lg); border: 1px solid var(--line); }
